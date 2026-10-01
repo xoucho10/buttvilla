@@ -1,0 +1,3 @@
+﻿import Header from "../../components/Header"
+import Footer from "../../components/Footer"
+export default function Page(){return (<div className="bg-[#FFFCF7] min-h-screen"><Header/><div className="max-w-7xl mx-auto px-6 py-16"><h1 className="text-5xl font-bold text-[#7A0F14]">Gallery</h1><div className="mt-8"><div className="grid grid-cols-3 gap-4"><div className="h-48 bg-white rounded-2xl border grid place-items-center">Class Photo</div><div className="h-48 bg-white rounded-2xl border grid place-items-center">Play Time</div><div className="h-48 bg-white rounded-2xl border grid place-items-center">Graduation</div></div></div></div><Footer/></div>)}

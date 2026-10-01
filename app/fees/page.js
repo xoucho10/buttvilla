@@ -1,0 +1,3 @@
+﻿import Header from "../../components/Header"
+import Footer from "../../components/Footer"
+export default function Page(){return (<div className="bg-[#FFFCF7] min-h-screen"><Header/><div className="max-w-7xl mx-auto px-6 py-16"><h1 className="text-5xl font-bold text-[#7A0F14]">Fees Structure</h1><div className="mt-8"><div className="bg-white p-8 rounded-2xl max-w-2xl"><table className="w-full text-sm"><tr className="border-b"><td className="py-3">Baby Class</td><td>350,000 UGX</td></tr><tr className="border-b"><td className="py-3">Middle</td><td>400,000 UGX</td></tr><tr className="border-b"><td className="py-3">Top Class</td><td>450,000 UGX</td></tr></table></div></div></div><Footer/></div>)}
