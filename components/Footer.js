@@ -6,10 +6,9 @@ export default function Footer(){
       <div className="max-w-[1280px] mx-auto px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr_1fr] gap-10">
 
-          {/* BRAND - LOGO NOW VISIBLE */}
+          {/* BRAND */}
           <div className="flex gap-5 items-start">
             <div className="w-[72px] h-[72px] rounded-full bg-white flex items-center justify-center flex-shrink-0 shadow-[0_4px_20px_rgba(0,0,0,0.3)] border-[3px] border-white">
-              {/* If you have /public/logo.png it will show, else B */}
               <img src="/logo.png" alt="Buttvilla Logo" className="w-[58px] h-[58px] object-contain" />
             </div>
             <div>
@@ -50,17 +49,20 @@ export default function Footer(){
             </div>
             <div className="mt-4 inline-flex bg-white/10 border border-white/10 rounded-full px-4 py-2 text-[11px]">🕗 Mon - Sat • 7:30am - 5:00pm</div>
           </div>
-
         </div>
 
-        {/* BOTTOM BAR - YOUR CREDIT HERE */}
-        <div className="mt-10 pt-6 border-t border-white/10 flex flex-col lg:flex-row justify-between gap-2 text-[11px]">
+        {/* BOTTOM BAR - XOUCHO10 WHATSAPP */}
+        <div className="mt-10 pt-6 border-t border-white/10 flex flex-col lg:flex-row justify-between gap-3 text-[11px] items-center">
           <div className="opacity-50">© 2026 Buttvilla Kindergarten Iganga. All rights reserved.</div>
           <div className="flex gap-2 items-center">
             <span className="opacity-50">Built with ❤️ for 40 Years</span>
-            <span className="opacity-30">|</span>
-            <a href="https://wa.me/256700000000" target="_blank" className="bg-white text-[#5a0a0f] px-3 py-1 rounded-full font-black text-[10px] tracking-widest hover:bg-[#FFD93D] transition">
-              WEBSITE BY N — YOUR NAME
+            <span className="opacity-30 hidden lg:inline">|</span>
+            <a
+              href="https://wa.me/256700568634?text=Hello%20Xoucho10%2C%20I%20saw%20your%20work%20on%20Buttvilla%20Kindergarten%20website%20%E2%80%94%20I%20need%20a%20website%20too!"
+              target="_blank"
+              className="bg-white text-[#5a0a0f] px-4 py-1.5 rounded-full font-black text-[10px] tracking-widest hover:bg-[#FFD93D] transition flex items-center gap-1"
+            >
+              WEBSITE BY <span className="text-[#7A0F14]">XOUCHO10</span> 💬
             </a>
           </div>
         </div>
