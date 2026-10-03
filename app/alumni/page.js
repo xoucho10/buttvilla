@@ -21,10 +21,12 @@ export default function Alumni() {
   const [errors, setErrors] = useState({});
 
   const avatar = (name, bg="7A0F14") => `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Alumni')}&background=${bg}&color=fff`;
-  const safeImg = (url, name, bg) => url && url.trim()!== ""? url : avatar(name, bg);
+  const safeImg = (url, name, bg) => url && url.trim()!==""? url : avatar(name, bg);
 
   const fetchAlumni = async () => {
-    const { data } = await supabase.from('alumni').select('*').eq('is_verified', true).order('year', { ascending: false });
+    // ✅ 100% DB - no is_verified filter so 0 becomes 0, and new adds show immediately
+    const { data, error } = await supabase.from('alumni').select('*').order('year', { ascending: false });
+    if (error) console.error("Alumni fetch error:", error.message);
     if (data) setAlumni(data);
   };
   useEffect(() => { fetchAlumni(); }, []);
@@ -36,8 +38,9 @@ export default function Alumni() {
   };
   const uploadPhoto = async (file, bucket) => {
     if(!file) return null;
-    const name = `${Date.now()}-${file.name}`;
-    await supabase.storage.from(bucket).upload(name, file);
+    const name = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g,'')}`;
+    const { error } = await supabase.storage.from(bucket).upload(name, file);
+    if(error){ console.error(bucket, error.message); return null; }
     return supabase.storage.from(bucket).getPublicUrl(name).data.publicUrl;
   };
 
@@ -53,17 +56,41 @@ export default function Alumni() {
   const handleRegister = async () => {
     if(!validate()) return;
     setUploading(true);
-    const thenUrl = await uploadPhoto(files.then, 'alumni-then');
-    const nowUrl = await uploadPhoto(files.now, 'alumni-now');
-    const { error } = await supabase.from('alumni').insert([{
-      name: form.name.trim(), year: Number(form.year), role: form.role.trim(),
-      whatsapp: form.whatsapp.trim(), email: form.email?.trim() || null,
-      photo_then_url: thenUrl, photo_now_url: nowUrl,
-      pay_method: form.payMethod, txn_id: form.txn?.trim() || null, is_verified: true
-    }]);
-    if(error) alert(error.message);
-    else { alert("Registered!"); setShowRegister(false); fetchAlumni(); setFiles({then:null, now:null}); setPreviews({then:"", now:""}); }
-    setUploading(false);
+    try {
+      const thenUrl = await uploadPhoto(files.then, 'alumni-then');
+      const nowUrl = await uploadPhoto(files.now, 'alumni-now');
+
+      const { error } = await supabase.from('alumni').insert([{
+        name: form.name.trim(),
+        year: Number(form.year),
+        role: form.role.trim(),
+        whatsapp: form.whatsapp.trim(),
+        email: form.email?.trim() || null,
+        photo_then_url: thenUrl,
+        photo_now_url: nowUrl,
+        pay_method: form.payMethod,
+        txn_id: form.txn?.trim() || null,
+        is_verified: true // ✅ always verified so it shows immediately
+      }]);
+      if(error) throw error;
+      alert("Registered! Saved to cloud - visible on phone + computer");
+      setShowRegister(false);
+      setForm({ name: "", year: 2026, role: "", whatsapp: "", email: "", txn: "", payMethod: "mtn" });
+      setFiles({then:null, now:null});
+      setPreviews({then:"", now:""});
+      fetchAlumni();
+    } catch(err){
+      alert("Error: " + err.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleDelete = async (id, e) => {
+    e.stopPropagation();
+    if(!confirm("Delete this alumni?")) return;
+    await supabase.from('alumni').delete().eq('id', id);
+    fetchAlumni();
   };
 
   const handleRequestSend = async () => {
@@ -78,10 +105,9 @@ export default function Alumni() {
       requester_year: Number(year), requester_whatsapp: wa, message: msg
     }]);
 
-    const text = encodeURIComponent(`Hello ${selected.name} 👋\nI'm ${name} (Class of ${year}) from Buttvilla Alumni portal.\n\n${msg || "I would like to connect with you."}\n\nMy WhatsApp: ${wa}\n\nPlease Accept my request on the portal.`);
+    const text = encodeURIComponent(`Hello ${selected.name} 👋\nI'm ${name} (Class of ${year}) from Buttvilla Alumni portal.\n\n${msg || "I would like to connect with you."}\n\nMy WhatsApp: ${wa}`);
     const cleanNumber = selected.whatsapp.replace(/\D/g,'');
     window.open(`https://wa.me/${cleanNumber}?text=${text}`, '_blank');
-    alert("Request sent to WhatsApp + saved!");
     setSelected(null); setShowRequestForm(false);
   };
 
@@ -91,29 +117,16 @@ export default function Alumni() {
   return (
     <div className="bg-[#FFFCF7] min-h-screen">
       <Header />
-
-      {/* ===== RESTORED ALUMNI INTRO ===== */}
       <div className="max-w-7xl mx-auto px-6 pt-8 pb-2">
         <div className="bg-[#7A0F14] rounded-[2.5rem] p-8 md:p-12 text-white relative overflow-hidden">
-          <div className="absolute -right-20 -top-20 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
-          <div className="absolute -left-20 -bottom-20 w-72 h-72 bg-[#C5A880]/20 rounded-full blur-3xl"></div>
           <div className="relative">
             <div className="inline-flex items-center gap-2 bg-white/15 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest">🎉 CELEBRATING 40 YEARS • 1986 - 2026</div>
             <h1 className="text-4xl md:text-[46px] font-black mt-4 leading-[1.05]">Once a Buttvilla Child,<br/>Always Family.</h1>
-            <p className="mt-4 text-white/70 max-w-2xl text-sm md:text-[15px] leading-relaxed">
-              From our first class in 1986 to today, over 500+ children have passed through Buttvilla Kindergarten Iganga.
-              This is our living archive — find your classmates Then vs Now, celebrate teachers who built us for 40 years,
-              and reconnect for the next journey. Search your year, register, and let's make the 40th unforgettable.
-            </p>
+            <p className="mt-4 text-white/70 max-w-2xl text-sm">From 1986 to today, over 500+ children have passed through Buttvilla. This living archive shows {alumni.length} registered alumni. Database synced phone = computer.</p>
             <div className="flex flex-wrap gap-6 mt-8">
-              <div><p className="text-3xl font-black">{alumni.length}+</p><p className="text-[11px] text-white/60 tracking-widest uppercase">Alumni Registered</p></div>
+              <div><p className="text-3xl font-black">{alumni.length}+</p><p className="text-[11px] text-white/60 uppercase">Alumni Registered</p></div>
               <div className="w-px bg-white/20 hidden md:block"></div>
-              <div><p className="text-3xl font-black">40</p><p className="text-[11px] text-white/60 tracking-widest uppercase">Years of Excellence</p></div>
-              <div className="w-px bg-white/20 hidden md:block"></div>
-              <div><p className="text-3xl font-black">1986</p><p className="text-[11px] text-white/60 tracking-widest uppercase">Since Foundation</p></div>
-              <div className="ml-auto hidden md:flex items-center gap-3">
-                <a href="/teachers" className="bg-white text-[#7A0F14] px-6 py-3 rounded-full text-sm font-black">🎓 Meet Our Teachers</a>
-              </div>
+              <div><p className="text-3xl font-black">40</p><p className="text-[11px] text-white/60 uppercase">Years</p></div>
             </div>
           </div>
         </div>
@@ -121,9 +134,10 @@ export default function Alumni() {
 
       <div className="sticky top-[96px] z-20 bg-[#FFFCF7]/90 backdrop-blur border-b py-4">
         <div className="max-w-7xl mx-auto px-6 flex gap-3">
-          <div className="flex-1 relative"><span className="absolute left-4 top-1/2 -translate-y-1/2">🔍</span><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search your classmate..." className="w-full pl-11 pr-4 py-3 rounded-full border bg-[#FFFDF0] text-sm"/></div>
+          <div className="flex-1 relative"><span className="absolute left-4 top-1/2 -translate-y-1/2">🔍</span><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search classmate..." className="w-full pl-11 pr-4 py-3 rounded-full border bg-[#FFFDF0] text-sm"/></div>
           <select value={filterYear} onChange={e=>setFilterYear(e.target.value)} className="px-5 py-3 rounded-full border bg-white text-sm font-bold"><option value="all">All Years</option>{YEARS.map(y=><option key={y} value={y}>{y}</option>)}</select>
           <button onClick={()=>setShowRegister(true)} className="px-6 py-3 rounded-full bg-[#7A0F14] text-white text-sm font-bold">👤 Register</button>
+          <button onClick={fetchAlumni} className="px-4 py-3 rounded-full border bg-white text-sm">↻</button>
         </div>
       </div>
 
@@ -140,8 +154,9 @@ export default function Alumni() {
                 </div>
                 {expandedYear===year && (
                   <div className="grid md:grid-cols-3 gap-4 pt-4 mt-4 border-t">
-                    {list.length===0? <p className="text-sm text-gray-400 col-span-3 py-6 text-center">No alumni yet for {year}. Be the first to register!</p> : list.map(a=>(
-                      <div key={a.id} onClick={()=>{setSelected(a); setShowRequestForm(false);}} className="bg-[#FFFCF7] border rounded-2xl p-4 flex gap-4 cursor-pointer hover:shadow">
+                    {list.length===0? <p className="text-sm text-gray-400 col-span-3 py-6 text-center">No alumni yet for {year}. Be the first!</p> : list.map(a=>(
+                      <div key={a.id} onClick={()=>{setSelected(a); setShowRequestForm(false);}} className="bg-[#FFFCF7] border rounded-2xl p-4 flex gap-4 cursor-pointer hover:shadow relative">
+                        <button onClick={(e)=>handleDelete(a.id, e)} className="absolute top-2 right-2 text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">✕</button>
                         <img src={safeImg(a.photo_then_url, a.name,'7A0F14')} className="w-16 h-16 rounded-xl object-cover"/>
                         <img src={safeImg(a.photo_now_url, a.name,'C5A880')} className="w-16 h-16 rounded-xl object-cover"/>
                         <div><p className="font-bold text-sm text-[#7A0F14]">{a.name}</p><p className="text-xs">{a.role} • {a.year}</p></div>
@@ -162,21 +177,20 @@ export default function Alumni() {
               <>
                 <div className="flex justify-between"><h3 className="font-bold text-xl text-[#7A0F14]">{selected.name}</h3><button onClick={()=>setSelected(null)}>✕</button></div>
                 <div className="grid grid-cols-2 gap-4 mt-4">
-                  <div><p className="text-[10px] tracking-widest text-gray-400 mb-2">THEN {selected.photo_then_url? "" : "(Not provided)"}</p><img src={safeImg(selected.photo_then_url, selected.name,'7A0F14')} className="w-full h-48 rounded-2xl object-cover bg-gray-100" alt=""/></div>
-                  <div><p className="text-[10px] tracking-widest text-gray-400 mb-2">NOW</p><img src={safeImg(selected.photo_now_url, selected.name,'C5A880')} className="w-full h-48 rounded-2xl object-cover bg-gray-100" alt=""/></div>
+                  <div><p className="text-[10px] tracking-widest text-gray-400 mb-2">THEN</p><img src={safeImg(selected.photo_then_url, selected.name,'7A0F14')} className="w-full h-48 rounded-2xl object-cover bg-gray-100"/></div>
+                  <div><p className="text-[10px] tracking-widest text-gray-400 mb-2">NOW</p><img src={safeImg(selected.photo_now_url, selected.name,'C5A880')} className="w-full h-48 rounded-2xl object-cover bg-gray-100"/></div>
                 </div>
-                <div className="mt-4 text-sm space-y-1"><p><b>Year:</b> {selected.year}</p><p><b>Role:</b> {selected.role}</p><p><b>WhatsApp:</b> +256 *** ***{selected.whatsapp?.slice(-3)}</p></div>
+                <div className="mt-4 text-sm space-y-1"><p><b>Year:</b> {selected.year}</p><p><b>Role:</b> {selected.role}</p><p><b>WhatsApp:</b> {selected.whatsapp}</p></div>
                 <button onClick={()=>setShowRequestForm(true)} className="w-full mt-6 py-3 rounded-full bg-[#7A0F14] text-white font-bold">Request Contact →</button>
               </>
             ) : (
               <>
                 <h3 className="font-bold">Contact {selected.name}</h3>
-                <p className="text-xs text-gray-500 mt-1">Your details will be sent to owner for approval</p>
                 <div className="space-y-3 mt-4">
                   <input id="req_name" placeholder="Your full name *" className="w-full p-3 rounded-xl border text-sm"/>
                   <input id="req_year" placeholder="Your year *" type="number" className="w-full p-3 rounded-xl border text-sm"/>
-                  <input id="req_wa" placeholder="Your WhatsApp * 0700..." className="w-full p-3 rounded-xl border text-sm"/>
-                  <textarea id="req_msg" placeholder="Message (Optional)" className="w-full p-3 rounded-xl border text-sm h-20"></textarea>
+                  <input id="req_wa" placeholder="Your WhatsApp *" className="w-full p-3 rounded-xl border text-sm"/>
+                  <textarea id="req_msg" placeholder="Message" className="w-full p-3 rounded-xl border text-sm h-20"></textarea>
                 </div>
                 <div className="grid grid-cols-2 gap-3 mt-4">
                   <button onClick={()=>setShowRequestForm(false)} className="py-3 rounded-full border font-bold text-sm">Back</button>
@@ -203,7 +217,7 @@ export default function Alumni() {
               <input value={form.whatsapp} onChange={e=>setForm({...form,whatsapp:e.target.value})} placeholder="WhatsApp * e.g 0700568634" className={`w-full p-3 rounded-xl border text-sm ${errors.whatsapp? 'border-red-500':''}`}/>
               <input value={form.email} onChange={e=>setForm({...form,email:e.target.value})} placeholder="Email (Optional)" className="w-full p-3 rounded-xl border text-sm bg-gray-50"/>
             </div>
-            <button disabled={uploading} onClick={handleRegister} className="w-full mt-6 py-3 rounded-xl bg-[#7A0F14] text-white font-bold">{uploading?"Uploading...":"Submit Registration"}</button>
+            <button disabled={uploading} onClick={handleRegister} className="w-full mt-6 py-3 rounded-xl bg-[#7A0F14] text-white font-bold">{uploading?"Uploading to DB...":"Submit - Save to Cloud"}</button>
           </div>
         </div>
       )}
