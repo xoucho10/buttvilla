@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useRef } from "react"
 
 const menu = [
   { label: "About", items: [
@@ -33,8 +33,18 @@ const menu = [
 ]
 
 export default function Header(){
-  const [open, setOpen] = useState(null)
+  const [open, setOpen] = useState<string | null>(null)
   const [mobile, setMobile] = useState(false)
+  const timerRef = useRef<any>(null)
+
+  const handleEnter = (label: string) => {
+    if(timerRef.current) clearTimeout(timerRef.current)
+    setOpen(label)
+  }
+  const handleLeave = () => {
+    timerRef.current = setTimeout(() => setOpen(null), 150)
+  }
+
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-[#C5A880]/20">
       <div className="max-w-7xl mx-auto px-6 h-[88px] md:h-[96px] flex justify-between items-center gap-3">
@@ -46,7 +56,7 @@ export default function Header(){
               src="/logo.png"
               alt="Buttvilla Kindergarten Iganga Logo"
               className="w-full h-full object-contain"
-              onError={(e)=>{ e.currentTarget.src="https://via.placeholder.com/100x100/7A0F14/FFFFFF?text=B" }}
+              onError={(e)=>{ (e.currentTarget as HTMLImageElement).src="https://via.placeholder.com/100x100/7A0F14/FFFFFF?text=B" }}
             />
           </div>
           <div className="leading-none">
@@ -63,15 +73,31 @@ export default function Header(){
 
         {/* DESKTOP NAV */}
         <nav className="hidden lg:flex gap-0.5 items-center">
+          {/* ✅ HOME ADDED - FIRST ITEM */}
+          <Link href="/" className="px-3.5 py-2.5 text-[13px] font-bold hover:text-[#7A0F14] rounded-full hover:bg-[#FFFCF7] transition">Home</Link>
+
           {menu.map((m)=>(
-            <div key={m.label} className="relative" onMouseEnter={()=>setOpen(m.label)} onMouseLeave={()=>setOpen(null)}>
+            <div
+              key={m.label}
+              className="relative"
+              onMouseEnter={()=>handleEnter(m.label)}
+              onMouseLeave={handleLeave}
+            >
               <button className="px-3.5 py-2.5 text-[13px] font-semibold hover:text-[#7A0F14] flex items-center gap-1 rounded-full hover:bg-[#FFFCF7] transition">{m.label} <span className="text-[8px] opacity-60">▼</span></button>
+
+              {/* ✅ FIX: wrapper with pt-2 creates invisible bridge, so menu doesn't disappear */}
               {open===m.label && (
-                <div className="absolute top-full left-0 mt-2 bg-white border border-black/5 shadow-[0_12px_40px_rgba(0,0,0,0.12)] rounded-2xl p-2 min-w-[230px] z-50 animate-in fade-in slide-in-from-top-1">
-                  {m.items.map((it)=>{
-                    const isTeachers = it.href==="/teachers";
-                    return <Link key={it.label+it.href} href={it.href} className={`block px-4 py-2.5 text-[13px] rounded-xl transition ${isTeachers? 'bg-[#7A0F14] text-white font-bold hover:bg-[#5a0b0f] mt-1 shadow' : 'hover:bg-[#FFFCF7] hover:text-[#7A0F14] font-medium text-gray-700'}`}>{it.label}</Link>
-                  })}
+                <div className="absolute top-full left-0 pt-2 z-50">
+                  <div
+                    className="bg-white border border-black/5 shadow-[0_12px_40px_rgba(0,0,0,0.12)] rounded-2xl p-2 min-w-[230px] animate-in fade-in slide-in-from-top-1"
+                    onMouseEnter={()=>handleEnter(m.label)}
+                    onMouseLeave={handleLeave}
+                  >
+                    {m.items.map((it)=>{
+                      const isTeachers = it.href==="/teachers";
+                      return <Link key={it.label+it.href} href={it.href} className={`block px-4 py-2.5 text-[13px] rounded-xl transition ${isTeachers? 'bg-[#7A0F14] text-white font-bold hover:bg-[#5a0b0f] mt-1 shadow' : 'hover:bg-[#FFFCF7] hover:text-[#7A0F14] font-medium text-gray-700'}`}>{it.label}</Link>
+                    })}
+                  </div>
                 </div>
               )}
             </div>
@@ -89,8 +115,12 @@ export default function Header(){
         <div className="lg:hidden bg-white border-t border-black/5 max-h-[85vh] overflow-auto shadow-2xl">
           <div className="px-6 py-6 grid gap-6">
             <div className="grid grid-cols-2 gap-3">
+              <Link href="/" onClick={()=>setMobile(false)} className="bg-[#FFFCF7] border border-black/5 text-center py-4 rounded-full font-black text-[13px]">🏠 HOME</Link>
               <Link href="/alumni" onClick={()=>setMobile(false)} className="bg-[#7A0F14] text-white text-center py-4 rounded-full font-black text-[13px] shadow">🔥 500+ ALUMNI</Link>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
               <Link href="/teachers" onClick={()=>setMobile(false)} className="bg-black text-white text-center py-4 rounded-full font-black text-[13px] shadow">🎓 TEACHERS 40YRS</Link>
+              <Link href="/contact" onClick={()=>setMobile(false)} className="bg-white border-2 border-black text-center py-4 rounded-full font-black text-[13px]">CONTACT</Link>
             </div>
             {menu.map((m)=>(
               <div key={m.label}>
