@@ -23,8 +23,15 @@ export default function Alumni() {
   const avatar = (name, bg="7A0F14") => `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Alumni')}&background=${bg}&color=fff`;
   const safeImg = (url, name, bg) => url && url.trim()!==""? url : avatar(name, bg);
 
+  // ✅ NEW: mask whatsapp for privacy
+  const maskWa = (num) => {
+    if(!num) return "";
+    const s = num.toString().replace(/\D/g,'');
+    if(s.length < 7) return s.slice(0,2) + "****" + s.slice(-2);
+    return s.slice(0,4) + "****" + s.slice(-3); // 0700****123
+  };
+
   const fetchAlumni = async () => {
-    // ✅ 100% DB - no is_verified filter so 0 becomes 0, and new adds show immediately
     const { data, error } = await supabase.from('alumni').select('*').order('year', { ascending: false });
     if (error) console.error("Alumni fetch error:", error.message);
     if (data) setAlumni(data);
@@ -70,7 +77,7 @@ export default function Alumni() {
         photo_now_url: nowUrl,
         pay_method: form.payMethod,
         txn_id: form.txn?.trim() || null,
-        is_verified: true // ✅ always verified so it shows immediately
+        is_verified: true
       }]);
       if(error) throw error;
       alert("Registered! Saved to cloud - visible on phone + computer");
@@ -180,8 +187,13 @@ export default function Alumni() {
                   <div><p className="text-[10px] tracking-widest text-gray-400 mb-2">THEN</p><img src={safeImg(selected.photo_then_url, selected.name,'7A0F14')} className="w-full h-48 rounded-2xl object-cover bg-gray-100"/></div>
                   <div><p className="text-[10px] tracking-widest text-gray-400 mb-2">NOW</p><img src={safeImg(selected.photo_now_url, selected.name,'C5A880')} className="w-full h-48 rounded-2xl object-cover bg-gray-100"/></div>
                 </div>
-                <div className="mt-4 text-sm space-y-1"><p><b>Year:</b> {selected.year}</p><p><b>Role:</b> {selected.role}</p><p><b>WhatsApp:</b> {selected.whatsapp}</p></div>
+                <div className="mt-4 text-sm space-y-1">
+                  <p><b>Year:</b> {selected.year}</p>
+                  <p><b>Role:</b> {selected.role}</p>
+                  <p><b>WhatsApp:</b> {maskWa(selected.whatsapp)} <span className="text-[10px] text-gray-400">• hidden</span></p>
+                </div>
                 <button onClick={()=>setShowRequestForm(true)} className="w-full mt-6 py-3 rounded-full bg-[#7A0F14] text-white font-bold">Request Contact →</button>
+                <p className="text-[10px] text-gray-400 text-center mt-3">Full number shared only via WhatsApp request</p>
               </>
             ) : (
               <>
