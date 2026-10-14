@@ -1,7 +1,5 @@
 ﻿"use client";
 import { useEffect, useState } from "react";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
 import { supabase } from "../../lib/supabase";
 
 export default function EventsPage(){
@@ -23,8 +21,6 @@ export default function EventsPage(){
 
   return (
     <div className="bg-[#FFFCF7] min-h-screen">
-      <Header/>
-
       {/* HERO */}
       <div className="max-w-7xl mx-auto px-6 pt-8">
         <div className="bg-[#7A0F14] rounded-[2.5rem] p-8 md:p-12 text-white relative overflow-hidden">
@@ -107,7 +103,6 @@ export default function EventsPage(){
         </div>
       )}
 
-      <Footer/>
-    </div>
+      </div>
   )
 }

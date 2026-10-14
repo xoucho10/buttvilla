@@ -1,7 +1,5 @@
 ﻿"use client";
 import { useState } from "react";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
 import Link from "next/link";
 
 const UNIFORMS = {
@@ -23,40 +21,37 @@ export default function UniformPage(){
   const data = UNIFORMS[gender];
 
   return (
-    <div className="bg-[#FFFCF7] min-h-screen">
-      <Header/>
-
-      {/* HERO - HERITAGE */}
-      <div className="max-w-7xl mx-auto px-6 pt-6">
-        <div className="bg-[#7A0F14] rounded-[2rem] p-8 md:p-12 text-white grid md:grid-cols-2 gap-8 items-center relative overflow-hidden">
-          <div className="relative z-10">
-            <p className="inline-flex bg-white/15 px-4 py-1 rounded-full text-[11px] font-bold tracking-widest">👕 SAME COLOR SINCE 1986 • 40 YEARS LEGACY</p>
-            <h1 className="text-4xl md:text-6xl font-black mt-4 leading-none">Uniform</h1>
-            <p className="text-white/70 mt-3 text-sm md:text-base">Our reddish maroon is not just a color — it's an identity. Every child from Baby to Top Class wears the same pride that 500+ alumni wore.</p>
-            <div className="mt-6 grid grid-cols-3 gap-3 text-center">
-              <div className="bg-white/10 rounded-xl p-3"><p className="font-black text-lg">100%</p><p className="text-[10px] text-white/60">Cotton Cream</p></div>
-              <div className="bg-white/10 rounded-xl p-3"><p className="font-black text-lg">Maroon</p><p className="text-[10px] text-white/60">#7A0F14 Official</p></div>
-              <div className="bg-white/10 rounded-xl p-3"><p className="font-black text-lg">40 Yrs</p><p className="text-[10px] text-white/60">Unchanged</p></div>
-            </div>
+    <div className="bg-[#FFFCF7]">
+      {/* HERO SAME AS ENROLLMENT/ACADEMICS - FULL WIDTH MAROON */}
+      <div className="w-full bg-[#7A0F14]">
+        <div className="max-w-[1280px] mx-auto px-6 lg:px-8 py-12 md:py-16">
+          <div className="flex flex-wrap gap-2 mb-6">
+            <span className="bg-white/10 border border-white/20 text-white/80 text-[11px] font-black tracking-widest px-4 py-1.5 rounded-full">EST 1986 • 40 YEARS • P.O BOX 580 • SAME COLOR</span>
+            <span className="bg-[#C5A880] text-[#7A0F14] text-[11px] font-black tracking-widest px-4 py-1.5 rounded-full">UNIFORM DB NO - SAME SINCE 1986</span>
           </div>
-          <div className="relative z-10 bg-white rounded-[1.5rem] p-6 text-black">
-            <p className="font-black">Full Set Includes (UGX 120,000)</p>
-            <ul className="mt-4 space-y-2 text-sm">
-              <li className="flex gap-2"><span className="text-green-600">✓</span> 2x Cream shirts/blouses</li>
-              <li className="flex gap-2"><span className="text-green-600">✓</span> 2x Check shorts / dress</li>
-              <li className="flex gap-2"><span className="text-green-600">✓</span> 1x Maroon sweater with crest</li>
-              <li className="flex gap-2"><span className="text-green-600">✓</span> 1x Sports kit (white tee + maroon short)</li>
-              <li className="flex gap-2"><span className="text-green-600">✓</span> 1x School bag (maroon)</li>
-            </ul>
-            <Link href="/enrollment" className="block text-center mt-5 py-3 bg-[#7A0F14] text-white rounded-full font-bold text-sm">Get Uniform on Enrollment →</Link>
+          <h1 className="font-black leading-[0.9] tracking-tight text-[36px] md:text-[56px] max-w-4xl">
+            <span className="text-white block">Reddish Maroon</span>
+            <span className="text-[#C5A880] block">Identity Since 1986</span>
+          </h1>
+          <p className="text-white/60 text-[14px] max-w-[720px] mt-5">Our reddish maroon is not just a color — it's an identity. Every child from Baby to Top Class wears same pride 500+ alumni wore. Cream + maroon check, same place 100m Bulaga Post Office. P.O Box 580 Bulaga.</p>
+          <div className="mt-10 grid grid-cols-3 gap-6 max-w-[720px] border-t border-white/10 pt-8">
+            <div><div className="font-black text-[28px] text-white">40 Yrs</div><div className="mt-2 text-[10px] font-black text-white/50 uppercase">UNCHANGED COLOR<br/>#7A0F14 Official</div></div>
+            <div className="border-l border-white/10 pl-6"><div className="font-black text-[28px] text-white">120k</div><div className="mt-2 text-[10px] font-black text-white/50 uppercase">FULL SET<br/>2 Shirts + Check</div></div>
+            <div className="border-l border-white/10 pl-6"><div className="font-black text-[28px] text-[#C5A880]">100%</div><div className="mt-2 text-[10px] font-black text-white/50 uppercase">COTTON CREAM<br/>Cotton + Crest</div></div>
+          </div>
+          <div className="mt-8 bg-white rounded-[16px] p-2 flex gap-2 max-w-fit overflow-x-auto">
+            <Link href="/admissions" className="px-5 py-2 rounded-full text-[12px] font-black bg-[#FFFCF7] border whitespace-nowrap">Admissions DB NO</Link>
+            <Link href="/enrollment" className="px-5 py-2 rounded-full text-[12px] font-black bg-[#FFFCF7] border whitespace-nowrap">Enrollment DB YES</Link>
+            <Link href="/fees" className="px-5 py-2 rounded-full text-[12px] font-black bg-[#FFFCF7] border whitespace-nowrap">Fees DB NO</Link>
+            <Link href="/uniform" className="px-5 py-2 rounded-full text-[12px] font-black bg-[#7A0F14] text-white whitespace-nowrap">Uniform DB NO</Link>
           </div>
         </div>
       </div>
 
-      {/* INTERACTIVE SELECTOR */}
+      {/* YOUR INTERACTIVE SELECTOR - KEPT SAME */}
       <div className="max-w-7xl mx-auto px-6 py-8 grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-[2rem] border p-2 flex gap-2 w-fit">
+          <div className="bg-white rounded-[2rem] border p-2 flex gap-2 w-fit flex-wrap">
             <button onClick={()=>setGender("Boy")} className={`px-6 py-3 rounded-full font-black text-sm ${gender==="Boy"?'bg-black text-white':'bg-[#FFFCF7] text-gray-500'}`}>👦 Boy</button>
             <button onClick={()=>setGender("Girl")} className={`px-6 py-3 rounded-full font-black text-sm ${gender==="Girl"?'bg-black text-white':'bg-[#FFFCF7] text-gray-500'}`}>👧 Girl</button>
             <div className="w-px bg-gray-200 mx-2"/>
@@ -68,79 +63,59 @@ export default function UniformPage(){
             <div className="bg-[#FFFCF7] rounded-[1.5rem] p-8 grid place-items-center">
               <div className="text-[120px]">{data.image}</div>
               <p className="font-black mt-2">{gender} - {view==="daily"?'Daily Class':'Sports Day'}</p>
-              <p className="text-xs text-gray-400">Illustrative • Actual uniform at school</p>
+              <p className="text-xs text-gray-400">Illustrative • Actual uniform at school P.O Box 580</p>
               <div className="mt-6 flex gap-2">
                 <div className="w-8 h-8 rounded-full bg-[#FFF8DC] border" title="Cream"></div>
                 <div className="w-8 h-8 rounded-full bg-[#7A0F14] border" title="Maroon"></div>
                 <div className="w-8 h-8 rounded-full bg-black border" title="Black shoes"></div>
-                <div className="w-8 h-8 rounded-full bg-white border" title="White sports"></div>
               </div>
             </div>
-
             <div>
-              <h3 className="font-black text-xl">{view==="daily"?'Monday to Tuesday + Thursday':'Wednesday & Friday'}</h3>
-              <p className="text-sm text-gray-500 mt-1">{view==="daily"?'Official classroom uniform - must be neat, ironed, crest visible':'PE / Games day - for sports and play-based learning'}</p>
+              <h3 className="font-black text-xl">{view==="daily"?'Mon Tue Thu':'Wed & Fri Sports'}</h3>
+              <p className="text-sm text-gray-500 mt-1">{view==="daily"?'Official classroom - must be neat, ironed, crest visible':'PE / Games - for sports and play-based learning'}</p>
               <div className="mt-6 space-y-3">
                 {(view==="daily"?data.daily:data.sports).map((item,i)=>(
                   <div key={i} className="flex gap-3 bg-[#FFFCF7] rounded-xl p-3 text-sm"><span className="w-6 h-6 bg-white rounded-full grid place-items-center text-xs font-black shrink-0">{i+1}</span><span className="font-medium">{item}</span></div>
                 ))}
               </div>
-
               <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-xs">
-                <p className="font-black">⚠️ Grooming Rules</p>
+                <p className="font-black">⚠️ Grooming Rules - Same Since 1986</p>
                 <ul className="mt-2 space-y-1 list-disc pl-4 text-gray-600">
                   <li>Hair cut short & neat (boys), plaited (girls) - no dye</li>
-                  <li>Nails trimmed every Monday checked</li>
+                  <li>Nails trimmed Monday checked</li>
                   <li>Sweater must have embroidered crest - no plain</li>
-                  <li>Black shoes polished, not open shoes</li>
+                  <li>Black shoes polished, not open shoes - Self Drop</li>
                 </ul>
               </div>
             </div>
           </div>
 
-          {/* SIZING GUIDE */}
           <div className="mt-6 bg-white rounded-[2rem] border p-8">
-            <h3 className="font-black">Sizing Guide (Age based)</h3>
+            <h3 className="font-black">Sizing Guide (Age based) - Measure at School</h3>
             <div className="mt-4 grid grid-cols-4 gap-2 text-xs font-bold">
               <div className="bg-[#FFFCF7] p-3 rounded-xl text-center"><p>Age 2-3</p><p className="text-gray-400 font-normal">Size 20</p></div>
               <div className="bg-[#FFFCF7] p-3 rounded-xl text-center"><p>Age 3-4</p><p className="text-gray-400 font-normal">Size 22</p></div>
               <div className="bg-[#FFFCF7] p-3 rounded-xl text-center"><p>Age 4-5</p><p className="text-gray-400 font-normal">Size 24</p></div>
               <div className="bg-[#FFFCF7] p-3 rounded-xl text-center"><p>Age 5-6</p><p className="text-gray-400 font-normal">Size 26</p></div>
             </div>
-            <p className="text-[11px] text-gray-400 mt-3">We measure child on admission day at school. Exchange within 7 days if tight.</p>
           </div>
         </div>
 
-        {/* RIGHT */}
         <div className="space-y-4">
           <div className="bg-white rounded-[1.5rem] border p-6">
-            <p className="font-black">Where to Buy?</p>
+            <p className="font-black">Where to Buy? P.O Box 580 Bulaga</p>
             <div className="mt-4 space-y-3 text-sm">
-              <div className="bg-[#FFFCF7] rounded-xl p-4"><p className="font-bold">1. School Store (Recommended)</p><p className="text-xs text-gray-500 mt-1">Original crest + correct check. Pay on enrollment day.</p><p className="text-xs font-black mt-2 text-[#7A0F14]">UGX 120,000 full set</p></div>
-              <div className="bg-[#FFFCF7] rounded-xl p-4 opacity-60"><p className="font-bold">2. Outside Tailor</p><p className="text-xs text-gray-500 mt-1">We give you fabric sample, but crest must be bought at school (UGX 10,000)</p></div>
+              <div className="bg-[#FFFCF7] rounded-xl p-4 border-2 border-[#7A0F14]/20"><p className="font-bold">1. School Store (Recommended)</p><p className="text-xs text-gray-500 mt-1">Original crest + correct check. Pay on enrollment day.</p><p className="text-xs font-black mt-2 text-[#7A0F14]">UGX 120,000 full set</p></div>
             </div>
-            <a href="https://wa.me/256700000000?text=Uniform%20for%20my%20child" className="block text-center w-full mt-4 py-3 bg-black text-white rounded-full font-bold text-sm">WhatsApp for Uniform</a>
+            <Link href="/enrollment" className="block text-center w-full mt-4 py-3 bg-[#7A0F14] text-white rounded-full font-bold text-sm">Get Uniform on Enrollment →</Link>
           </div>
-
           <div className="bg-[#7A0F14] rounded-[1.5rem] p-6 text-white">
-            <p className="font-black">Why Maroon?</p>
-            <p className="text-sm text-white/70 mt-2 leading-relaxed">Chosen in 1986 by founders for discipline, warmth, and easy stain hiding. For 40 years we never changed it — so when you see maroon & cream check in Iganga, you know it's Buttvilla.</p>
+            <p className="font-black">Why Maroon? Since 1986</p>
+            <p className="text-sm text-white/70 mt-2 leading-relaxed">Chosen in 1986 for discipline, warmth, stain hiding. For 40 years we never changed it — when you see maroon & cream check in Iganga, you know it's Buttvilla. Self drop 100m Bulaga Post Office.</p>
             <p className="text-[11px] mt-4 bg-white/15 inline-block px-3 py-1 rounded-full">Nurturing eggs into roosters since 1986 🐓</p>
-          </div>
-
-          <div className="bg-white rounded-[1.5rem] border p-6">
-            <p className="font-black text-sm">Not Allowed ❌</p>
-            <ul className="mt-3 text-xs text-gray-500 space-y-2 list-disc pl-4">
-              <li>Jeans, leggings under uniform</li>
-              <li>Colored sweaters (must be maroon)</li>
-              <li>Jewelry, makeup, nail polish</li>
-              <li>Crocs, sandals, slippers</li>
-            </ul>
           </div>
         </div>
       </div>
-
-      <Footer/>
     </div>
   )
 }

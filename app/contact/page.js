@@ -1,7 +1,5 @@
 ﻿"use client";
 import { useState } from "react";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
 import { supabase } from "../../lib/supabase";
 
 export default function ContactPage(){
@@ -20,8 +18,6 @@ export default function ContactPage(){
 
   return (
     <div className="bg-[#FFFCF7] min-h-screen">
-      <Header/>
-
       <div className="max-w-7xl mx-auto px-6 pt-8">
         <div className="bg-[#7A0F14] rounded-[2.5rem] p-8 md:p-12 text-white grid md:grid-cols-2 gap-10">
           <div>
@@ -74,7 +70,6 @@ export default function ContactPage(){
         </div>
       </div>
 
-      <Footer/>
-    </div>
+      </div>
   )
 }

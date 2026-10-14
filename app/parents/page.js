@@ -1,7 +1,5 @@
 ﻿"use client";
 import { useEffect, useState } from "react";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
 import { supabase } from "../../lib/supabase";
 import Link from "next/link";
 
@@ -125,7 +123,6 @@ export default function ParentsPortal(){
 
   return (
     <div className="bg-[#FFFCF7] min-h-screen">
-      <Header/>
       <div className="max-w-7xl mx-auto px-6 pt-6">
         <div className="bg-black rounded-[2rem] p-8 md:p-10 text-white grid md:grid-cols-2 gap-8 items-center relative overflow-hidden">
           {showChangePin && (
@@ -225,7 +222,6 @@ export default function ParentsPortal(){
           </div>
         </div>
       </div>
-      <Footer/>
-    </div>
+      </div>
   )
 }

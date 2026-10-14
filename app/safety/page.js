@@ -1,11 +1,8 @@
 ﻿"use client";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
 
 export default function SafetyPage(){
   return (
     <div className="bg-[#FFFCF7] min-h-screen">
-      <Header/>
       <div className="max-w-7xl mx-auto px-6 pt-10">
         <p className="inline-flex bg-[#7A0F14] text-white px-4 py-1 rounded-full text-[11px] font-bold tracking-widest">🛡️ SAFETY & CARE • 40 YEARS NO INCIDENT</p>
         <h1 className="text-5xl md:text-7xl font-black mt-4 text-[#7A0F14] leading-none">Safety & Care</h1>
@@ -44,7 +41,6 @@ export default function SafetyPage(){
           </div>
         </div>
       </div>
-      <Footer/>
-    </div>
+      </div>
   )
 }

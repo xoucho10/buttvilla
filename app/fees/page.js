@@ -1,7 +1,5 @@
 ﻿"use client";
 import { useState } from "react";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
 import Link from "next/link";
 
 const FEES = {
@@ -12,31 +10,48 @@ const FEES = {
 
 export default function FeesPage(){
   const [cls, setCls] = useState("Top Class");
-  const [needTransport, setNeedTransport] = useState(false);
   const [needMeals, setNeedMeals] = useState(true);
+  const [siblings, setSiblings] = useState(1);
+
   const data = FEES[cls];
-  const total = data.term + data.registration + data.uniform + (needMeals? data.meals:0) + (needTransport? 180000:0);
+  const subtotal = data.term + data.registration + data.uniform + (needMeals? data.meals:0);
+  const discount = siblings===2? 0.10 : siblings>=3? 0.15 : 0;
+  const total = Math.round(subtotal * (1 - discount));
   const monthly = Math.round(total/3);
 
   return (
-    <div className="bg-[#FFFCF7] min-h-screen">
-      <Header/>
-      <div className="max-w-7xl mx-auto px-6 pt-6">
-        <div className="bg-[#7A0F14] rounded-[2rem] p-8 md:p-12 text-white relative overflow-hidden">
-          <div className="relative z-10">
-            <div className="inline-flex bg-white/15 px-4 py-1 rounded-full text-[11px] font-bold tracking-widest">💰 TRANSPARENT • NO HIDDEN FEES • 40 YEARS TRUST</div>
-            <h1 className="text-4xl md:text-6xl font-black mt-4 leading-none">Fees Structure</h1>
-            <p className="text-white/70 mt-3 max-w-2xl text-sm md:text-base">We keep it affordable for Iganga families. Same maroon uniform since 1986. Pay termly or monthly — no child sent home.</p>
-            <div className="mt-6 flex gap-2 text-xs"><span className="bg-white text-[#7A0F14] px-3 py-1 rounded-full font-bold">M-PESA & Bank Accepted</span><span className="bg-white/20 px-3 py-1 rounded-full">Siblings 10% Off</span></div>
+    <div className="bg-[#FFFCF7]">
+      {/* HERO SAME AS ENROLLMENT/UNIFORM - FULL WIDTH */}
+      <div className="w-full bg-[#7A0F14]">
+        <div className="max-w-[1280px] mx-auto px-6 lg:px-8 py-12 md:py-16">
+          <div className="flex flex-wrap gap-2 mb-6">
+            <span className="bg-white/10 border border-white/20 text-white/80 text-[11px] font-black tracking-widest px-4 py-1.5 rounded-full">EST 1986 • 40 YEARS • P.O BOX 580 • NO HIDDEN FEES</span>
+            <span className="bg-[#C5A880] text-[#7A0F14] text-[11px] font-black tracking-widest px-4 py-1.5 rounded-full">STRUCTURAL ONLY - DB LATER</span>
+          </div>
+          <h1 className="font-black leading-[0.9] tracking-tight text-[36px] md:text-[56px] max-w-4xl">
+            <span className="text-white block">Transparent Fees</span>
+            <span className="text-[#C5A880] block">No Hidden Since 1986</span>
+          </h1>
+          <p className="text-white/60 text-[14px] max-w-[720px] mt-5">We keep it affordable for Iganga families. Same maroon uniform since 1986. Pay termly or monthly — no child sent home for fees. Sibling discount up to 15%. P.O Box 580 Bulaga 100m Post Office.</p>
+          <div className="mt-10 grid grid-cols-3 gap-6 max-w-[720px] border-t border-white/10 pt-8">
+            <div><div className="font-black text-[28px] text-white">350k+</div><div className="mt-2 text-[10px] font-black text-white/50 uppercase">TUITION TERM<br/>Baby to Top</div></div>
+            <div className="border-l border-white/10 pl-6"><div className="font-black text-[28px] text-white">0</div><div className="mt-2 text-[10px] font-black text-white/50 uppercase">HIDDEN FEES<br/>40 Yrs Trust</div></div>
+            <div className="border-l border-white/10 pl-6"><div className="font-black text-[28px] text-[#C5A880]">15%</div><div className="mt-2 text-[10px] font-black text-white/50 uppercase">SIBLING OFF<br/>2nd & 3rd Child</div></div>
+          </div>
+          <div className="mt-8 bg-white rounded-[16px] p-2 flex gap-2 max-w-fit overflow-x-auto">
+            <Link href="/admissions" className="px-5 py-2 rounded-full text-[12px] font-black bg-[#FFFCF7] border whitespace-nowrap">Admissions DB NO</Link>
+            <Link href="/enrollment" className="px-5 py-2 rounded-full text-[12px] font-black bg-[#FFFCF7] border whitespace-nowrap">Enrollment</Link>
+            <Link href="/fees" className="px-5 py-2 rounded-full text-[12px] font-black bg-[#7A0F14] text-white whitespace-nowrap">Fees DB NO</Link>
+            <Link href="/uniform" className="px-5 py-2 rounded-full text-[12px] font-black bg-[#FFFCF7] border whitespace-nowrap">Uniform DB NO</Link>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8 grid lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
+      <div className="max-w-[1280px] mx-auto px-6 py-8 grid lg:grid-cols-[1.1fr_0.6fr] gap-6">
+        <div className="space-y-6">
           <div className="bg-white rounded-[1.5rem] border p-2 flex gap-2">
             {Object.keys(FEES).map(c=>(
-              <button key={c} onClick={()=>setCls(c)} className={`flex-1 py-3 rounded-full font-black text-sm transition ${cls===c?'bg-[#7A0F14] text-white shadow':'bg-[#FFFCF7] text-gray-500'}`}>{c}</button>
+              <button key={c} onClick={()=>setCls(c)} className={`flex-1 py-3 rounded-full font-black text-sm ${cls===c?'bg-[#7A0F14] text-white':'bg-[#FFFCF7] text-gray-500'}`}>{c}</button>
             ))}
           </div>
 
@@ -44,75 +59,53 @@ export default function FeesPage(){
             <div className="p-8">
               <div className="flex justify-between items-center">
                 <h2 className="font-black text-xl">{cls} — Term 1 2026</h2>
-                <span className="text-[11px] bg-green-100 text-green-700 px-3 py-1 rounded-full font-bold">INTAKE OPEN</span>
+                <span className="text-[11px] bg-green-100 text-green-700 px-3 py-1 rounded-full font-bold">INTAKE OPEN • 23 SLOTS</span>
               </div>
 
               <div className="mt-6 divide-y">
-                {[
-                  {label:"Tuition Fee (per term)", value:data.term, desc:"Learning, books, play materials"},
-                  {label:"Registration (one-time)", value:data.registration, desc:"New students only, paid once"},
-                  {label:"Uniform Full Set", value:data.uniform, desc:"Reddish maroon - 2 shirts, shorts/dress, sweater"},
-                  {label:"Lunch & Porridge", value:data.meals, desc:"Optional but recommended", toggle: needMeals, set: setNeedMeals},
-                  {label:"School Van (Iganga town)", value:180000, desc:"Optional door-to-door", toggle: needTransport, set: setNeedTransport},
-                ].map((row,i)=>(
-                  <div key={i} className="flex justify-between py-4 gap-4">
-                    <div>
-                      <div className="font-bold text-sm flex items-center gap-2">
-                        <span>{row.label}</span>
-                        {row.toggle!==undefined && (
-                          <label className="relative inline-flex items-center cursor-pointer ml-2">
-                            <input type="checkbox" checked={row.toggle} onChange={e=>row.set(e.target.checked)} className="sr-only peer"/>
-                            <div className="w-9 h-5 bg-gray-200 rounded-full peer peer-checked:bg-[#7A0F14] relative after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition"></div>
-                          </label>
-                        )}
-                      </div>
-                      <div className="text-xs text-gray-400 mt-1">{row.desc}</div>
-                    </div>
-                    <div className={`font-black text-sm shrink-0 ${row.toggle===false?'text-gray-300 line-through':''}`}>{row.value.toLocaleString()} UGX</div>
-                  </div>
-                ))}
+                <div className="flex justify-between py-4"><div><div className="font-bold text-sm">Tuition Fee (per term) <span className="text-red-500">*</span></div><div className="text-xs text-gray-400">Learning, books, play, P1 prep</div></div><div className="font-black text-sm">{data.term.toLocaleString()} UGX</div></div>
+                <div className="flex justify-between py-4"><div><div className="font-bold text-sm">Registration (one-time) <span className="text-red-500">*</span></div><div className="text-xs text-gray-400">New students only, paid once</div></div><div className="font-black text-sm">{data.registration.toLocaleString()} UGX</div></div>
+                <div className="flex justify-between py-4"><div><div className="font-bold text-sm">Uniform Full Set <span className="text-red-500">*</span></div><div className="text-xs text-gray-400">Reddish maroon since 1986 - 2 shirts, check</div></div><div className="font-black text-sm">{data.uniform.toLocaleString()} UGX</div></div>
+                <div className="flex justify-between py-4"><div><div className="font-bold text-sm flex gap-2">Lunch & Porridge <label className="relative inline-flex items-center cursor-pointer ml-2"><input type="checkbox" checked={needMeals} onChange={e=>setNeedMeals(e.target.checked)} className="sr-only peer"/><div className="w-9 h-5 bg-gray-200 rounded-full peer peer-checked:bg-[#7A0F14] relative after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition"></div></label></div><div className="text-xs text-gray-400">Hot porridge 10am + lunch 12:30 - Recommended</div></div><div className={`font-black text-sm ${!needMeals?'text-gray-300 line-through':''}`}>{data.meals.toLocaleString()} UGX</div></div>
+                {/* ONLY SELF DROP - NO VAN */}
+                <div className="flex justify-between py-4 bg-[#FFFCF7] px-4 rounded-xl mt-2"><div><div className="font-bold text-sm text-[#7A0F14]">Transport: No - Self Drop Only</div><div className="text-xs text-gray-400">100m from Bulaga Post Office, Iganga - 7am-5pm drop - No school van</div></div><div className="font-black text-sm text-gray-400">0 UGX</div></div>
               </div>
 
-              <div className="mt-6 bg-[#FFFCF7] rounded-2xl p-5 flex justify-between items-center">
-                <div><div className="text-xs text-gray-400 font-bold tracking-widest">TOTAL FIRST TERM</div><div className="text-3xl font-black text-[#7A0F14]">{total.toLocaleString()} UGX</div><div className="text-xs text-gray-500">≈ {monthly.toLocaleString()} UGX / month if paid monthly</div></div>
-                <Link href="/enrollment" className="bg-[#7A0F14] text-white px-6 py-3 rounded-full font-bold text-sm">Enroll Now →</Link>
+              <div className="mt-6 grid md:grid-cols-2 gap-4">
+                <div className="bg-[#FFFCF7] rounded-2xl p-5">
+                  <div className="text-[11px] font-black tracking-widest opacity-50">SIBLINGS?</div>
+                  <div className="mt-2 flex gap-2">{[1,2,3].map(n=><button key={n} onClick={()=>setSiblings(n)} className={`px-4 py-2 rounded-full text-sm font-bold border ${siblings===n?'bg-black text-white':'bg-white'}`}>{n} child {n>1 && `• -${n===2?10:15}%`}</button>)}</div>
+                </div>
+                <div className="bg-[#7A0F14] rounded-2xl p-5 text-white flex justify-between items-center">
+                  <div><div className="text-[11px] opacity-60 font-bold">TOTAL FIRST TERM</div><div className="text-3xl font-black">{total.toLocaleString()} UGX</div><div className="text-xs opacity-80">≈ {monthly.toLocaleString()} / month</div></div>
+                  <Link href="/enrollment" className="bg-white text-[#7A0F14] px-6 py-3 rounded-full font-black text-sm">Enroll →</Link>
+                </div>
               </div>
             </div>
-
             <div className="bg-black text-white p-6 flex flex-wrap gap-6 text-xs">
-              <span>🏦 <b>Bank:</b> Centenary Bank - Buttvilla Kindergarten - 3100000000</span>
-              <span>📱 <b>MTN MoMo:</b> 0700 000 000</span>
-              <span>📱 <b>Airtel Money:</b> 0700 000 001</span>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-[2rem] border p-8">
-            <h3 className="font-black">Common Questions</h3>
-            <div className="mt-4 space-y-3 text-sm">
-              <details className="bg-[#FFFCF7] rounded-xl p-4"><summary className="font-bold cursor-pointer">Is uniform included every term?</summary><div className="text-gray-500 mt-2">No, only first term. Replacement if child outgrows.</div></details>
-              <details className="bg-[#FFFCF7] rounded-xl p-4"><summary className="font-bold cursor-pointer">Can I pay in installments?</summary><div className="text-gray-500 mt-2">Yes! Pay monthly via MoMo. No extra charge. We never send children home for fees.</div></details>
-              <details className="bg-[#FFFCF7] rounded-xl p-4"><summary className="font-bold cursor-pointer">Sibling discount?</summary><div className="text-gray-500 mt-2">10% off for 2nd child, 15% off for 3rd child.</div></details>
+              <span>🏦 Bank: Centenary - Buttvilla - 3100000000</span>
+              <span>📱 MoMo: 0700 000 000</span>
+              <span>📍 Self Drop Only: P.O Box 580 Bulaga</span>
             </div>
           </div>
         </div>
 
         <div className="space-y-4">
           <div className="bg-white rounded-[1.5rem] border p-6 sticky top-6">
-            <div className="font-black">Fee Calculator</div>
-            <div className="text-xs text-gray-400 mt-1">Select options above — total updates live.</div>
-            <div className="mt-6 space-y-2 text-sm">
+            <div className="font-black text-lg">Fee Calculator • Live</div>
+            <div className="mt-6 space-y-3 text-sm">
               <div className="flex justify-between"><span className="text-gray-500">Class</span><span className="font-bold">{cls}</span></div>
               <div className="flex justify-between"><span className="text-gray-500">Meals</span><span className="font-bold">{needMeals?'Yes':'No'}</span></div>
-              <div className="flex justify-between"><span className="text-gray-500">Transport</span><span className="font-bold">{needTransport?'Yes':'No'}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">Transport</span><span className="font-bold">No - Self Drop</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">Siblings</span><span className="font-bold">{siblings} {discount>0 && `(-${discount*100}%)`}</span></div>
               <div className="h-px bg-gray-100 my-3"/>
               <div className="flex justify-between text-lg"><span className="font-black">Pay Now</span><span className="font-black text-[#7A0F14]">{total.toLocaleString()} UGX</span></div>
             </div>
-            <Link href="/enrollment" className="block text-center w-full mt-6 py-3 bg-black text-white rounded-full font-bold text-sm">Proceed to Enrollment</Link>
-            <a href={`https://wa.me/256700000000?text=Hello%20Buttvilla%2C%20I%20want%20fees%20details%20for%20${cls}`} className="block text-center w-full mt-2 py-3 border rounded-full font-bold text-sm">WhatsApp Bursar</a>
+            <Link href="/enrollment" className="block text-center w-full mt-6 py-3.5 bg-[#7A0F14] text-white rounded-full font-black text-sm">Proceed to Enrollment →</Link>
+            <div className="mt-4 text-[10px] text-gray-400 text-center">Structural only - DB later - Self Drop Only</div>
           </div>
         </div>
       </div>
-      <Footer/>
     </div>
   )
 }
